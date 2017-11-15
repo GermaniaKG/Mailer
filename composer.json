@@ -1,5 +1,5 @@
 {
-	"name": "germania-kg/googlerecaptcha",
+	"name": "germania-kg/mailer",
 	"description": "Pimple Service Provider for email and SwiftMailer services.",
 
 	"license": "MIT",
