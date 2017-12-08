@@ -26,14 +26,14 @@
 
 	"require": {
 			"pimple/pimple": "^3.0",
-      "swiftmailer/swiftmailer": "^6.0",
+      "swiftmailer/swiftmailer": "^5.4|^6.0",
       "germania-kg/swiftmailer-callable":"^1.0",
 			"psr/log": "^1.0"
 	},
 
 	"require-dev": {
 			"satooshi/php-coveralls": "^1.0",
-			"phpunit/phpunit": "^5.2|^6.0"
+			"phpunit/phpunit": "^5.7|^6.0"
 	}
 
 
