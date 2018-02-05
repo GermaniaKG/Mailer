@@ -87,7 +87,7 @@ class MailerServiceProvider implements ServiceProviderInterface
 
             $message->setFrom( $from )
                     ->setTo( $to )
-                    ->setSubject( $mail_config->subject );
+                    ->setSubject( $mail_config['subject'] );
             return $message;
         });
 
