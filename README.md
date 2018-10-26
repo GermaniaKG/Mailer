@@ -18,15 +18,32 @@ Alternatively, add this package directly to your *composer.json:*
 ```
 
 
-## Usage
+## Registering
 
 
 ```php
 <?php
 use Germania\Mailer\MailerServiceProvider;
 
-// ... to be done.
+// Use with Pimple or Slim3:
+$dic->register( new MailerServiceProvider );
+
+$dic->extend('Mailer.Config', function($default_config, $dic) {
+  $mail_file = ...
+  $custom_config = Yaml::parseFile( $mail_file );
+  return array_merge($default_config, $custom_config);
+});
 ```
+
+## Usage 
+
+```php
+<?php
+$mailer = $dic['Mailer.Callable'];
+
+$result = $mailer("The subject", "<p>The mailtext</p>", "admin@test.com");
+```
+
 
 
 ## Development
@@ -36,6 +53,7 @@ $ git clone https://github.com/GermaniaKG/Mailer.git
 $ cd Mailer
 $ composer install
 ```
+
 
 
 ## Unit tests
