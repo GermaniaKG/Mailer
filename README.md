@@ -41,6 +41,10 @@ $dic->extend('Mailer.Config', function($default_config, $dic) {
 <?php
 $mailer = $dic['Mailer.Callable'];
 
+
+$result = $mailer("The subject", "<p>The mailtext</p>");
+
+# Override receipient address
 $result = $mailer("The subject", "<p>The mailtext</p>", "admin@test.com");
 ```
 
