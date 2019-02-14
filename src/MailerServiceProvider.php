@@ -75,6 +75,8 @@ class MailerServiceProvider implements ServiceProviderInterface
 
 
         /**
+         * Factory method to create a new Swift_Message
+         *
          * @return Swift_Message
          */
         $dic['SwiftMailer.Message'] = $dic->factory(function( $dic ) {
