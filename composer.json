@@ -25,6 +25,7 @@
 	},
 
 	"require": {
+		"php": "^5.6|^7.0",
 		"pimple/pimple": "^3.0",
 		"swiftmailer/swiftmailer": "^5.4|^6.0",
 		"germania-kg/swiftmailer-callable":"^1.0",
