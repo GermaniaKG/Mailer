@@ -18,23 +18,30 @@
 		}
 	},
 
-  "autoload-dev": {
-      "psr-4": {
-      	"tests\\": "tests/src"
-      }
-  },
-
-	"require": {
-			"pimple/pimple": "^3.0",
-      "swiftmailer/swiftmailer": "^5.4|^6.0",
-      "germania-kg/swiftmailer-callable":"^1.0",
-			"psr/log": "^1.0"
+	"autoload-dev": {
+		"psr-4": {
+			"tests\\": "tests/src"
+		}
 	},
 
-	"require-dev": {
-			"satooshi/php-coveralls": "^1.0",
-			"phpunit/phpunit": "^5.7|^6.0"
-	}
+	"require": {
+		"pimple/pimple": "^3.0",
+		"swiftmailer/swiftmailer": "^5.4|^6.0",
+		"germania-kg/swiftmailer-callable":"^1.0",
+		"psr/log": "^1.0"
+	},
 
+    "require-dev": {
+        "php-coveralls/php-coveralls": "^2.0",
+        "phpunit/phpunit": "^5.7|^6.0|^7.0"
+    },
+    
+    "scripts": {
+          "phpunit": "phpunit --colors=auto",
+  
+          "test": [
+              "@phpunit"
+          ]
+    }
 
 }
