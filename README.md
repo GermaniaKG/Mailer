@@ -2,6 +2,13 @@
 
 **Pimple Service Provider for email and SwiftMailer services.**
 
+[![Packagist](https://img.shields.io/packagist/v/germania-kg/mailer.svg?style=flat)](https://packagist.org/packages/germania-kg/mailer)
+[![PHP version](https://img.shields.io/packagist/php-v/germania-kg/mailer.svg)](https://packagist.org/packages/germania-kg/mailer)
+[![Build Status](https://img.shields.io/travis/GermaniaKG/Mailer.svg?label=Travis%20CI)](https://travis-ci.org/GermaniaKG/Mailer)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/GermaniaKG/Mailer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/GermaniaKG/Mailer/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/GermaniaKG/Mailer/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/GermaniaKG/Mailer/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/GermaniaKG/Mailer/badges/build.png?b=master)](https://scrutinizer-ci.com/g/GermaniaKG/Mailer/build-status/master)
+
 
 ## Installation
 
@@ -9,13 +16,6 @@
 $ composer require germania-kg/mailer
 ```
 
-Alternatively, add this package directly to your *composer.json:*
-
-```json
-"require": {
-    "germania-kg/mailer": "^1.0"
-}
-```
 
 
 ## Registering
@@ -58,13 +58,12 @@ $ cd Mailer
 $ composer install
 ```
 
-
-
 ## Unit tests
 
-Either copy `phpunit.xml.dist` to `phpunit.xml` and adapt to your needs, or leave as is. 
-Run [PhpUnit](https://phpunit.de/) like this:
+Either copy `phpunit.xml.dist` to `phpunit.xml` and adapt to your needs, or leave as is. Run [PhpUnit](https://phpunit.de/) test or composer scripts like this:
 
 ```bash
+$ composer test
+# or
 $ vendor/bin/phpunit
 ```
