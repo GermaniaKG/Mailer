@@ -11,7 +11,7 @@ use \Swift_Mailer;
 use \Swift_Message;
 
 class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
-{	
+{
 
 	public function testInstantiation()
 	{
@@ -28,7 +28,7 @@ class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
 		$container->register( $sut );
 
 		$config = $container['Mailer.Config'];
-		$this->assertInternalType("array", $config);
+		$this->assertIsArray($config);
 	}
 
 	public function testCallable( )
@@ -39,7 +39,7 @@ class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
 		$container->register( $sut );
 
 		$result = $container['Mailer.Callable'];
-		$this->assertTrue( is_callable( $result ));
+		$this->assertIsCallable( $result );
 	}
 
 	public function testMailerLogger( )
