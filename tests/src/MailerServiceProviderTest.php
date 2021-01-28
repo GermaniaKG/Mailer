@@ -31,23 +31,50 @@ class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
         $this->assertIsArray($config);
     }
 
+
+
     /**
      * @dataProvider provideConfigurationOverrides
      */
-	public function testMailerConfigurationOverride( $override )
+	public function testMailerPreviousConfiguration( $override )
 	{
 		$container = new Container;
+        $container['Mailer.Config'] = function($dic) use ($override) {
+            return $override;
+        };
 
-		$sut = new MailerServiceProvider($override);
-		$container->register( $sut );
+		$container->register( new MailerServiceProvider() );
 
 		$config = $container['Mailer.Config'];
 		$this->assertIsArray($config);
+
         foreach($override as $field => $value ) {
             $this->assertArrayHasKey($field, $config);
             $this->assertEquals($value, $config[$field]);
         }
 	}
+
+
+    /**
+     * @dataProvider provideConfigurationOverrides
+     */
+    public function testMailerConfigurationInConstructor( $override )
+    {
+        $container = new Container;
+
+        $sut = new MailerServiceProvider($override);
+        $container->register( $sut );
+
+        $config = $container['Mailer.Config'];
+        $this->assertIsArray($config);
+
+        foreach($override as $field => $value ) {
+            $this->assertArrayHasKey($field, $config);
+            $this->assertEquals($value, $config[$field]);
+        }
+    }
+
+
 
     public function provideConfigurationOverrides()
     {

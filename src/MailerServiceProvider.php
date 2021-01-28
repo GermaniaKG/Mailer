@@ -40,12 +40,18 @@ class MailerServiceProvider implements ServiceProviderInterface
     public function register(Container $dic)
     {
 
-        /**
-         * @return  StdClass
-         */
-        $dic['Mailer.Config'] = function( $dic ) {
-            return $this->defaultConfig;
-        };
+
+
+        if (!isset($dic['Mailer.Config'])) {
+            $dic['Mailer.Config'] = function( $dic ) {
+                return $this->defaultConfig;
+            };
+        } else {
+            $dic->extend('Mailer.Config', function($existing_config, $dic ) {
+                return array_merge($this->defaultConfig, $existing_config);
+            });
+        }
+
 
 
         /**
