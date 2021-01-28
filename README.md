@@ -86,9 +86,15 @@ print_r($config);
 
 ### Configuration at Runtime
 
-This is done by extending the Pimple container:
+Two ways:
+
+- After registering the ServiceProvider to Pimple (i.e. extending the `Mailer.Config` service definition) 
+- Before registering, *pre-defining* the configuration in a `Mailer.Config` service definition
+
+#### After registering with Pimple
 
 ```php
+$dic->register( new MailerServiceProvider() );
 $dic->extend('Mailer.Config', function($default_config, $dic) {
   $new_config = array_merge($default_config, [
     'from_name' => 'John Doe',
@@ -96,6 +102,19 @@ $dic->extend('Mailer.Config', function($default_config, $dic) {
   ]);
   return $new_config;
 });
+```
+
+#### Before registering with Pimple
+
+```php
+$dic['Mailer.Config'] = function($dic) {
+  return array(
+    'from_name' => 'John Doe',
+    'from_mail' => 'me@test.com'
+  );
+};
+
+$dic->register( new MailerServiceProvider() );
 ```
 
 
