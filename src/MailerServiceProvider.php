@@ -15,28 +15,36 @@ use Germania\SwiftMailerCallable\SwiftMailerCallable;
 class MailerServiceProvider implements ServiceProviderInterface
 {
 
+    protected $defaultConfig = array(
+        'smtp' => null,
+        'port' => null,
+        'ssl' => null,
+        'user' => null,
+        'pass' => null,
+        'from_name' => null,
+        'from_mail' => null,
+        'to' => null,
+        'subject' => null
+    );
+
+
+    public function __construct( array $mailer_config = array() )
+    {
+        $this->defaultConfig = array_merge($this->defaultConfig, $mailer_config);
+    }
+
+
     /**
      * @implements ServiceProviderInterface
      */
     public function register(Container $dic)
     {
 
-
         /**
          * @return  StdClass
          */
         $dic['Mailer.Config'] = function( $dic ) {
-            return [
-                'smtp' => null,
-                'port' => null,
-                'ssl' => null,
-                'user' => null,
-                'pass' => null,
-                'from_name' => null,
-                'from_mail' => null,
-                'to' => null,
-                'subject' => null
-            ];
+            return $this->defaultConfig;
         };
 
 

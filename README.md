@@ -25,26 +25,95 @@ $ composer require germania-kg/mailer
 <?php
 use Germania\Mailer\MailerServiceProvider;
 
-// Use with Pimple or Slim3:
+$dic = new \Pimple\Container;
 $dic->register( new MailerServiceProvider );
+```
 
+## Configuration
+
+The configuration is an array with typical mail configration fields, each of them empty.
+
+You can retrieve the configuration from the Pimple container like this:
+
+```php
+$dic->register( new MailerServiceProvider );
+$config = $dic['Mailer.Config'];
+print_r($config);
+```
+
+```text
+(
+    [smtp] =>
+    [port] =>
+    [ssl] =>
+    [user] => 
+    [pass] =>
+    [from_name] =>
+    [from_mail] =>
+    [to] =>
+    [subject] =>
+)
+```
+
+### Configuration on Instantiation
+
+Pass a custom configuration to the *MailerServiceProvider* constructor. Register it to Pimple container as usual.
+
+```php
+$mailer_service_provider = new MailerServiceProvider([
+  'from_name' => 'John Doe',
+  'from_mail' => 'me@test.com'
+]);
+
+$dic->register( $mailer_service_provider );
+$config = $dic['Mailer.Config'];
+print_r($config);
+```
+
+```text
+(
+    [smtp] =>
+    [port] =>
+    [ssl] => 
+    [user] => 
+    [pass] =>
+    [from_name] => John Doe
+    [from_mail] => me@test.com
+    [to] =>
+    [subject] =>
+)
+```
+
+### Configuration at Runtime
+
+This is done by extending the Pimple container:
+
+```php
 $dic->extend('Mailer.Config', function($default_config, $dic) {
-  $mail_file = ...
-  $custom_config = Yaml::parseFile( $mail_file );
-  return array_merge($default_config, $custom_config);
+  $new_config = array_merge($default_config, [
+    'from_name' => 'John Doe',
+    'from_mail' => 'me@test.com'
+  ]);
+  return $new_config;
 });
 ```
 
-## Usage 
+
+
+
+
+## Usage
 
 ```php
 <?php
+// Grab the Mailer callable
 $mailer = $dic['Mailer.Callable'];
 
-
+// Send with subject and mail body
 $result = $mailer("The subject", "<p>The mailtext</p>");
 
 # Override receipient address
+# previosuly set in Mailer.Config
 $result = $mailer("The subject", "<p>The mailtext</p>", "admin@test.com");
 ```
 
@@ -57,6 +126,8 @@ $ git clone https://github.com/GermaniaKG/Mailer.git
 $ cd Mailer
 $ composer install
 ```
+
+
 
 ## Unit tests
 
