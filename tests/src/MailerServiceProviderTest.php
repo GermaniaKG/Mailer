@@ -93,6 +93,12 @@ class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
 		$sut = new MailerServiceProvider;
 		$container->register( $sut );
 
+        $container->extend('Mailer.Config', function($default) {
+            $default['to'] = [ 'me@test.com'];
+            $default['from_mail'] = 'me@test.com';
+            return $default;
+        });
+
 		$result = $container['Mailer.Callable'];
 		$this->assertIsCallable( $result );
 	}
@@ -108,6 +114,8 @@ class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf( LoggerInterface::class, $result);
 	}
 
+
+
 	public function testSwiftMailer( )
 	{
 		$container = new Container;
@@ -115,9 +123,14 @@ class MailerServiceProviderTest extends \PHPUnit\Framework\TestCase
 		$sut = new MailerServiceProvider;
 		$container->register( $sut );
 
+        $result = $container[Swift_Mailer::class];
+        $this->assertInstanceOf( Swift_Mailer::class, $result);
+
 		$result = $container['SwiftMailer'];
 		$this->assertInstanceOf( Swift_Mailer::class, $result);
 	}
+
+
 
 	public function testSwiftMailerMessage( )
 	{

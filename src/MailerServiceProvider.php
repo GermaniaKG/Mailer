@@ -65,10 +65,13 @@ class MailerServiceProvider implements ServiceProviderInterface
         /**
          * @return Swift_SmtpTransport
          */
-        $dic['SwiftMailer.Transport'] = function( $dic ) {
+        $dic[Swift_SmtpTransport::class] = function( $dic ) {
             $mail_config = $dic['Mailer.Config'];
 
-            $transport = new Swift_SmtpTransport( $mail_config['smtp'], $mail_config['port'], $mail_config['ssl'] ? 'ssl' : null);
+            $transport = new Swift_SmtpTransport(
+                $mail_config['smtp'],
+                $mail_config['port'],
+                $mail_config['ssl'] ? 'ssl' : null);
 
             $transport->setUsername( $mail_config['user'] )
                       ->setPassword( $mail_config['pass'] );
@@ -78,61 +81,103 @@ class MailerServiceProvider implements ServiceProviderInterface
 
 
         /**
-         * @return Swift_Mailer
+         * @return \Swift_Mailer
          */
-        $dic['SwiftMailer'] = function( $dic ) {
-            $transport = $dic['SwiftMailer.Transport'];
+        $dic[Swift_Mailer::class] = function( $dic ) {
+            $transport = $dic[Swift_SmtpTransport::class];
             return new Swift_Mailer( $transport );
+        };
+
+
+        // DEPRECATED
+        $dic['SwiftMailer'] = function( $dic ) {
+            return $dic[Swift_Mailer::class];
+        };
+
+
+
+
+
+        $dic[SwiftMessageFactory::class] = function($dic) {
+            $mail_config = $dic['Mailer.Config'];
+
+            $to = $mail_config['to'];
+            $from = array( $mail_config['from_mail'] => $mail_config['from_name'] );
+            $subject = $mail_config['subject'];
+
+            return new SwiftMessageFactory($to, $from, $subject);
+        };
+
+
+
+        $dic[SwiftHtmlMessageFactory::class] = function($dic) {
+            $mail_config = $dic['Mailer.Config'];
+
+            $to = $mail_config['to'];
+            $from = array( $mail_config['from_mail'] => $mail_config['from_name'] );
+            $subject = $mail_config['subject'];
+
+            return new SwiftHtmlMessageFactory($to, $from, $subject);
+        };
+
+
+        $dic[SwiftMessageFactoryInterface::class] = function($dic) {
+            return $dic[SwiftHtmlMessageFactory::class];
         };
 
 
 
 
         /**
-         * Factory method to create a new Swift_Message
+         * Container factory: Creates a new Swift_Message ON EACH CALL
+         *
+         * @return Swift_Message
+         */
+        $dic[Swift_Message::class] = $dic->factory(function( $dic ) {
+            $factory = $dic[SwiftMessageFactory::class];
+            return $factory->createMessage();
+        });
+
+
+
+        /**
+         * Container factory: Creates a new Swift_Message ON EACH CALL
          *
          * @return Swift_Message
          */
         $dic['SwiftMailer.Message'] = $dic->factory(function( $dic ) {
-            $mail_config = $dic['Mailer.Config'];
-            $message = new Swift_Message();
-
-            $from = array( $mail_config['from_mail'] => $mail_config['from_name'] );
-
-            $to = is_string($mail_config['to']) ? array( $mail_config['to'] ) : $mail_config['to'];
-
-            $message->setFrom( $from )
-                    ->setTo( $to )
-                    ->setSubject( $mail_config['subject'] );
-            return $message;
+            $factory = $dic[SwiftMessageFactory::class];
+            return $factory->createMessage();
         });
 
 
 
         /**
+         * Container factory: Creates a new Swift Html Message ON EACH CALL
+         *
          * @return Swift_Message
          */
         $dic['SwiftMailer.HtmlMessage'] = $dic->factory(function( $dic ) {
-            return $dic['SwiftMailer.Message']->setContentType( 'text/html');
+            $factory = $dic[SwiftHtmlMessageFactory::class];
+            return $factory->createMessage();
         });
 
 
 
         /**
-         * @return Callable
+         * @return Callable|SwiftMailerCallable
          */
-        $dic['Mailer.Callable'] = $dic->factory(function( $dic ) {
-            $mailer        = $dic['SwiftMailer'];
-            $mailer_logger = $dic['Mailer.Logger'];
+        $dic[SwiftMailerCallable::class] = function($dic) {
+            $mailer   = $dic['SwiftMailer'];
+            $logger   = $dic['Mailer.Logger'];
+            $factory  = $dic[SwiftMessageFactory::class];
+            $callable = $dic[SwiftHtmlMessageFactory::class ];
 
-            $mailer_callable = new SwiftMailerCallable($mailer, function() use ($dic) {
-                return $dic['SwiftMailer.HtmlMessage'];
-            });
+            return new SwiftMailerCallable($mailer, $callable, $logger);
+        };
 
-            $mailer_callable->setLogger( $mailer_logger );
-
-            return $mailer_callable;
-        });
+        // DEPRECATED
+        $dic['Mailer.Callable'] = function($dic) { return $dic[SwiftMailerCallable::class]; };
 
 
     }
