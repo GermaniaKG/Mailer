@@ -176,6 +176,9 @@ $message_factory = $dic[SwiftMessageFactory::class];
 $message = $message_factory->createMessage();
 $message->setBody("This is the mail body");
 
+// This optional as we set it with Configuration
+$message->setSubject( "Custom subject line" );
+
 // Send message
 $result = $swift_mailer->send( $message ));
 ```

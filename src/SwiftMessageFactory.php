@@ -9,6 +9,12 @@ class SwiftMessageFactory implements SwiftMessageFactoryInterface  {
     protected $from = array();
     protected $subject = "";
 
+
+    /**
+     * @param string $to      Recipient address
+     * @param string $from    Sender address
+     * @param string $subject Default subject line
+     */
     public function __construct( $to, $from, $subject )
     {
         $this->setTo($to);
@@ -50,6 +56,10 @@ class SwiftMessageFactory implements SwiftMessageFactoryInterface  {
         return $this->subject;
     }
 
+
+    /**
+     * @param string|null $subject
+     */
     public function setSubject( $subject ) {
 
         if (is_string($subject) or is_null($subject)) {
@@ -68,6 +78,11 @@ class SwiftMessageFactory implements SwiftMessageFactoryInterface  {
         return $this->from;
     }
 
+
+    /**
+     * @param string      $email  Sender email address
+     * @param string|null $name   Optional: Sender name
+     */
     public function setFrom( $email, $name = null) {
 
         if (is_string($email)) {
@@ -90,6 +105,10 @@ class SwiftMessageFactory implements SwiftMessageFactoryInterface  {
         return $this->to;
     }
 
+
+    /**
+     * @param string|array $email Recipient email address (or addresses array)
+     */
     public function setTo( $to ) {
         if (is_string($to)) {
             $this->to = array($to);
