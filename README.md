@@ -29,6 +29,8 @@ $dic = new \Pimple\Container;
 $dic->register( new MailerServiceProvider );
 ```
 
+
+
 ## Configuration
 
 The configuration is an array with typical mail configration fields, each of them empty.
@@ -55,7 +57,7 @@ print_r($config);
 )
 ```
 
-### Configuration on Instantiation
+### Configure on Instantiation
 
 Pass a custom configuration to the *MailerServiceProvider* constructor. Register it to Pimple container as usual.
 
@@ -84,7 +86,7 @@ print_r($config);
 )
 ```
 
-### Configuration at Runtime
+### Configure at Runtime
 
 Two ways:
 
@@ -123,9 +125,28 @@ $dic->register( new MailerServiceProvider() );
 
 ## Usage
 
+**Setup MailerServiceProvider:**
+
+```php
+$dic->register( new MailerServiceProvider([
+    'from_name' => 'John Doe',
+    'from_mail' => 'me@test.com',
+    'to'        => 'admin@test.com',
+  	'subject'   => 'Default subject'
+]));
+```
+
+
+
+### SwiftMailerCallable
+
 ```php
 <?php
+use Germania\SwiftMailerCallable\SwiftMailerCallable;
+
 // Grab the Mailer callable
+$mailer = $dic[SwiftMailerCallable::class];
+// DEPRECATED service name: 
 $mailer = $dic['Mailer.Callable'];
 
 // Send with subject and mail body
@@ -135,6 +156,36 @@ $result = $mailer("The subject", "<p>The mailtext</p>");
 # previosuly set in Mailer.Config
 $result = $mailer("The subject", "<p>The mailtext</p>", "admin@test.com");
 ```
+
+
+
+### SwiftMailer
+
+See https://swiftmailer.symfony.com/docs/introduction.html
+
+```php
+<?php
+use Germania\Mailer\SwiftMessageFactory;
+use \Swift_Mailer;
+
+// Grab Swiftmailer
+$swift_mailer = $dic[Swift_Mailer::class];  
+
+// Setup message
+$message_factory = $dic[SwiftMessageFactory::class];
+$message = $message_factory->createMessage();
+$message->setBody("This is the mail body");
+
+// This optional as we set it with Configuration
+$message->setSubject( "Custom subject line" );
+
+// Send message
+$result = $swift_mailer->send( $message ));
+```
+
+
+
+
 
 
 
